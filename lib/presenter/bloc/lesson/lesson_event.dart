@@ -29,3 +29,7 @@ class LessonEventPressUp extends LessonEvent {
 class LessonEventPressCancel extends LessonEvent {
 
 }
+
+class LessonEventStartScroll extends LessonEvent {
+
+}

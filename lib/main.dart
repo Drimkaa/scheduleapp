@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduleapp/core/utils/theme_switcher/theme_service.dart';
 import 'package:scheduleapp/injection_container.dart';
@@ -18,6 +21,9 @@ Future<void> main() async {
   final themeService = await ThemeService.instance;
   final appRouter = AppRouter();
   var initTheme = themeService.initial;
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,overlays: [
+      SystemUiOverlay.top
+      ]);
   runApp(
     ThemeProvider(
       initTheme: initTheme,
@@ -43,6 +49,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      scrollBehavior: MaterialScrollBehavior().copyWith(
+        dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
+      ),
       routerConfig: router.config(),
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,

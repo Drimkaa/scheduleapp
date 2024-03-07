@@ -35,9 +35,9 @@ class _DayWidget extends State<DayWidget> {
       bloc: day,
       builder: (context, state) {
         if (state.status == DateStateStatus.initial) {
-
+          int c = 0;
           return Container(
-            margin: EdgeInsets.only(right: 80),
+
             child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -70,7 +70,10 @@ class _DayWidget extends State<DayWidget> {
                   if ( state.lessons[i].state.hidden && !state.displayHiddenLessons)
                     const SizedBox()
                   else ...[
-                    if(state.displayHiddenLessons || !state.lessons[i].state.hidden) LessonWidget(lesson:  state.lessons[i],key: GlobalKey(),),
+                    if(state.displayHiddenLessons || !state.lessons[i].state.hidden)
+                      LessonWidget(lesson:  state.lessons[i],key: GlobalKey(),top: c++==0,
+                      bottom: ( !state.displayHiddenLessons&&state.lessons.length - state.hiddenLessons == c) || ( state.displayHiddenLessons && state.lessons.length== c))
+                      ,
                     if (i != state.lessons.lastIndexWhere((el) => !el.state.hidden) || state.displayHiddenLessons)
                       const SizedBox(
                         height: 16,

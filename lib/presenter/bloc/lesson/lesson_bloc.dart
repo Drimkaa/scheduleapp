@@ -22,6 +22,11 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
     on<LessonEventPressDown>(_pressDownLesson);
     on<LessonEventPressUp>(_pressUpLesson);
     on<LessonEventPressCancel>(_pressCancelLesson);
+    on<LessonEventStartScroll> (_goBack);
+  }
+  _goBack(LessonEventStartScroll event, Emitter<LessonState> emit) async {
+    if(state.isPressed)
+      emit(state.copyWith(isPressed: false));
   }
   _hideLesson(LessonEventHide event, Emitter<LessonState> emit) {
     emit(state.copyWith(hidden: true));
@@ -58,6 +63,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
   _pressDownLesson(LessonEventPressDown event, Emitter<LessonState> emit) async {
     emit(state.copyWith(isPressed: true));
   }
+
 
   _openEditMode(LessonEventOpenEditMode event, Emitter<LessonState> emit) async {
     emit(state.copyWith(editMode: true));

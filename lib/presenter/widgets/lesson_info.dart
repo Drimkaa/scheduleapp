@@ -4,16 +4,23 @@ import 'package:scheduleapp/core/constants/my_colors.dart';
 import 'package:scheduleapp/data/entities/lesson_entity.dart';
 
 class LessonInfoWidget extends StatelessWidget {
-  const LessonInfoWidget({super.key, required this.lesson});
-
+  const LessonInfoWidget({super.key, required this.lesson, required this.top,required this.bottom}) ;
+final bool bottom;
+final bool top;
   final  Lesson lesson;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 74,
+      decoration: BoxDecoration(
+          color: const MyColors().dark_2,
+          borderRadius: BorderRadius.only(
+        topRight: Radius.circular( top? 16:0),
+        bottomRight: Radius.circular(bottom?16:0)
+      )),
+
       padding: EdgeInsets.only(left: 22, top: 0, right: 0, bottom: 0),
-      color: const MyColors().dark_2,
+
       child: IntrinsicHeight(
         child: Row(
           children: [

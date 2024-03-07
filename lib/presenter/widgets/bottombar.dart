@@ -16,7 +16,7 @@ import '../bloc/edit/edit_state.dart';
 
 class ModesPageViewModeBottomBar extends StatelessWidget {
   const ModesPageViewModeBottomBar({super.key});
-
+  final double height = 70;
   @override
   Widget build(BuildContext context) {
     return BlocSelector<WeekPageBloc, WeekPageState, bool>(
@@ -26,17 +26,17 @@ class ModesPageViewModeBottomBar extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              height: state ? 60 : 0,
+              height: state ? height : 0,
               color: const MyColors().dark_3,
             ),
             Positioned(
               right: 0,
               bottom: 0,
               left: 0,
-              height: 60,
+              height: height,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                margin: EdgeInsets.only(top: state ? 0 : 60),
+                margin: EdgeInsets.only(top: state ? 0 : height),
                 color: const MyColors().dark_3,
                 child: BlocSelector<WeekPageBloc, WeekPageState, int>(
                   selector: (state2) => state2.selectedCount,
@@ -45,15 +45,16 @@ class ModesPageViewModeBottomBar extends StatelessWidget {
                     return SingleChildScrollView(
                       physics: const NeverScrollableScrollPhysics(),
                       child: SizedBox(
-                        height: 60,
+                        height: height,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 90,
-                              child: GestureDetector(
-                                onTap: () => {
-                                  if (state2 > 0) {BlocProvider.of<WeekPageBloc>(context).add(WeekPageEventHide())}
+                              width: 120,
+                              child: TextButton(
+                                style: TextButton.styleFrom(foregroundColor: Colors.transparent),
+                                onPressed: () {
+                                  if (state2 > 0) {BlocProvider.of<WeekPageBloc>(context).add(WeekPageEventHide());}
                                 },
                                 child: BlocSelector<WeekPageBloc, WeekPageState, bool>(
                                   selector: (state3) => state3.allIsHidden,
@@ -63,7 +64,7 @@ class ModesPageViewModeBottomBar extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           Icon(FluentIcons.border_all_20_regular, size: 28, color: color),
-                                          Text("Показать", style: TextStyle(color: color)),
+                                          Text("Показать", style:Theme.of(context).textTheme.titleMedium!.copyWith(color: color)),
                                         ],
                                       );
                                     }
@@ -72,7 +73,7 @@ class ModesPageViewModeBottomBar extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           Icon(FluentIcons.border_none_20_regular, size: 28, color: color),
-                                          Text("Ничего", style: TextStyle(color: color)),
+                                          Text("Ничего", style:Theme.of(context).textTheme.titleMedium!.copyWith(color: color)),
                                         ],
                                       );
                                     }
@@ -80,29 +81,32 @@ class ModesPageViewModeBottomBar extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Icon(FluentIcons.border_none_20_regular, size: 28, color: color),
-                                        Text("Скрыть", style: TextStyle(color: color)),
+                                        Text("Скрыть",  style:Theme.of(context).textTheme.titleMedium!.copyWith(color: color)),
                                       ],
                                     );
                                   },
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 32,
-                            ),
-                            GestureDetector(
-                              onTap: () => {if (state2 == 1) {AutoRouter.of(context).push( EditLessonRoute(lesson: BlocProvider.of<WeekPageBloc>(context).state.getSelectedLesson()??Lesson()))                  }},
-                              child: Column(
+                             SizedBox(
+                              width: 120,
+                            child:
+                        TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.transparent),
+                          onPressed: () {
+                            if (state2 == 1) {AutoRouter.of(context).push( EditLessonRoute(lesson: BlocProvider.of<WeekPageBloc>(context).state.getSelectedLesson()));}}
+                          ,
+                          child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(FluentIcons.edit_20_regular, size: 28, color: state2 == 1 ? Colors.white : Colors.white24),
                                   Text(
                                     "Изменить",
-                                    style: TextStyle(color: state2 == 1 ? Colors.white : Colors.white24),
+                                    style:  Theme.of(context).textTheme.titleMedium!.copyWith(color: state2 == 1 ? Colors.white : Colors.white24),
                                   ),
                                 ],
                               ),
-                            )
+                            ),)
                           ],
                         ),
                       ),

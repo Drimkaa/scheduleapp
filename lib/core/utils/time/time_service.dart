@@ -1,7 +1,24 @@
 
 
 import 'package:scheduleapp/core/constants/constants.dart';
+import 'package:scheduleapp/data/entities/date_entity.dart';
 export 'package:scheduleapp/core/constants/constants.dart';
+
+
+List<String> months = [
+  'Янв',
+  'Фев',
+  'Март',
+  'Апр',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Авг',
+  'Сен',
+  'Окт',
+  'Нояб',
+  'Дек'
+];
 class TimeService {
   TimeService._();
   static TimeService? _instance;
@@ -38,6 +55,25 @@ class TimeService {
   get semester {
     int currentMonth = currentTime.month;
     return currentMonth>=9 && currentMonth < 2 ? 1 : 2;
+  }
+
+  DateTime currentDateTime(int weekNumber){
+    int week = weekNumber;
+    if(semester==2){
+
+      return DateTime(currentTime.year, 2, 9 + (week-1)*7 - DateTime(currentTime.year, 2, 9, 0, 0).weekday, 0, 0);
+    } else {
+      return DateTime(currentTime.year, 9, 0 + (week-1)*7 - DateTime(currentTime.year, 9, 0, 0, 0).weekday, 0, 0);
+    }
+  }
+  String getWeekName(int weekNumber) {
+    int month = currentDateTime(weekNumber).month-1;
+    return months[month];
+  }
+
+  int getMonthDay(int weekNumber,Weekday day) {
+    int month = currentDateTime(weekNumber).day + day.pos+1;
+    return month;
   }
  int get weekNumber {
 
