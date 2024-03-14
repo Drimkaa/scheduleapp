@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-
-
 import '../../../core/constants/constants.dart';
 import '../../../core/constants/my_colors.dart';
-import '../../../core/utils/time/time_service.dart';
-
 
 class DayWidgetButton extends StatelessWidget {
-   DayWidgetButton({
+  const DayWidgetButton({
     Key? key,
     required this.day,
     required this.position,
@@ -23,42 +19,71 @@ class DayWidgetButton extends StatelessWidget {
   final int length;
   final int selected;
   final bool currentDay;
-   final Color _inactiveColor= const MyColors().dark_1;
 
+  static const Color _inactiveColor =  MyColors.dark_1;
+  static const double _startHue = 150.0;
+  static const double _saturation = 1.0;
+  static const double _lightness = 0.7;
+  static const double _alpha = 1.0;
+  static const double _blurRadius = 6.0;
+  static const double _spreadRadius = 1.0;
+  static const double _fontSize = 20.0;
+  static const FontWeight _fontWeight = FontWeight.w700;
 
   @override
   Widget build(BuildContext context) {
-        return InkWell(
-          onTap: onPressed,
-          child: Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-              color: currentDay
-                  ? HSVColor.fromAHSV(1, 150 + (length.toDouble() - position) * 10, 1, 1).toColor()
-                  : _inactiveColor,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                if (selected == position)
-                  BoxShadow(
-                    color: HSVColor.fromAHSV(1, 150 + (length.toDouble() - position) * 10, 1, 1).toColor(),
-                    spreadRadius: 1,
-                    blurRadius: 6,
-                  ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                day.shortName,
-                style: TextStyle(
-                  color: HSVColor.fromAHSV(1, 150 + (length.toDouble() - position) * 10, 0.7, 0.6).toColor(),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+
+    final color = currentDay
+        ? HSVColor.fromAHSV(
+      _alpha,
+      _startHue + (length.toDouble() - position) * 10,
+      _saturation,
+      _lightness,
+    ).toColor()
+        : _inactiveColor;
+
+    final boxShadow = selected == position
+        ? [
+      BoxShadow(
+        color: HSVColor.fromAHSV(
+          _alpha,
+          _startHue + (length.toDouble() - position) * 10,
+          _saturation,
+          _lightness,
+        ).toColor(),
+        spreadRadius: _spreadRadius,
+        blurRadius: _blurRadius,
+      ),
+    ]
+        : null;
+
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        height: 36,
+        width: 36,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: boxShadow,
+        ),
+        duration: Duration(milliseconds: 200),
+        child: Center(
+          child: Text(
+            day.shortName,
+            style: TextStyle(
+              color: HSVColor.fromAHSV(
+                _alpha,
+                _startHue + (length.toDouble() - position) * 10,
+                _saturation,
+                _lightness * 0.6, // Adjusting lightness for text color
+              ).toColor(),
+              fontSize: _fontSize,
+              fontWeight: _fontWeight,
             ),
           ),
-        );
-      }
-
+        ),
+      ),
+    );
+  }
 }

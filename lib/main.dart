@@ -21,6 +21,7 @@ Future<void> main() async {
   final themeService = await ThemeService.instance;
   final appRouter = AppRouter();
   var initTheme = themeService.initial;
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,overlays: [
       SystemUiOverlay.top
       ]);

@@ -4,23 +4,19 @@ import 'package:scheduleapp/core/constants/my_colors.dart';
 import 'package:scheduleapp/data/entities/lesson_entity.dart';
 
 class LessonInfoWidget extends StatelessWidget {
-  const LessonInfoWidget({super.key, required this.lesson, required this.top,required this.bottom}) ;
-final bool bottom;
-final bool top;
-  final  Lesson lesson;
+  const LessonInfoWidget({super.key, required this.lesson, required this.top, required this.bottom});
+  final bool bottom;
+  final bool top;
+  final Lesson lesson;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: const MyColors().dark_2,
-          borderRadius: BorderRadius.only(
-        topRight: Radius.circular( top? 16:0),
-        bottomRight: Radius.circular(bottom?16:0)
-      )),
-
-      padding: EdgeInsets.only(left: 22, top: 0, right: 0, bottom: 0),
-
+          color: MyColors.dark_2,
+          borderRadius:
+              BorderRadius.only(topRight: Radius.circular(top ? 16 : 0), bottomRight: Radius.circular(bottom ? 16 : 0))),
+      padding: const EdgeInsets.only(left: 22, top: 0, right: 0, bottom: 0),
       child: IntrinsicHeight(
         child: Row(
           children: [
@@ -32,8 +28,7 @@ final bool top;
                 children: [
                   Text(lesson.time.start, style: Theme.of(context).textTheme.bodyLarge),
                   Text(lesson.classroom,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(color: const MyColors().first)),
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: MyColors.first)),
                   Text(lesson.time.end, style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
@@ -47,14 +42,14 @@ final bool top;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      color: const MyColors().dark_4,
-                      borderRadius: const BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
+                    decoration: const BoxDecoration(
+                      color: MyColors.dark_4,
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     child: Text(
                       lesson.subjectType.shortName.toUpperCase(),
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: const MyColors().second),
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: MyColors.second),
                     ),
                   ),
                   const SizedBox(height: 8),

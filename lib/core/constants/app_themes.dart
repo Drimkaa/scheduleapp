@@ -26,15 +26,15 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
 
 
 
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     selectedLabelStyle: TextStyle(
-      color: const MyColors().first,
+      color:  MyColors.first,
       fontSize: 12,
       height: 1,
       fontWeight: FontWeight.w400,
     ),
     unselectedLabelStyle: TextStyle(
-      color: const MyColors().firstD,
+      color:  MyColors.firstD,
       fontWeight: FontWeight.w300,
       fontSize: 12,
       height: 1,
@@ -48,9 +48,9 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
 
     ),
 
-    selectedItemColor: const MyColors().first,
-    unselectedItemColor: const MyColors().firstD,
-    backgroundColor: MyColors().dark_3,
+    selectedItemColor:  MyColors.first,
+    unselectedItemColor:  MyColors.firstD,
+    backgroundColor: MyColors.dark_3,
   ),
   extensions: <ThemeExtension<dynamic>>[const MyColors()],
 );

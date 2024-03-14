@@ -1,33 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduleapp/core/constants/constants.dart';
-
 import 'package:scheduleapp/presenter/bloc/day/day_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/day/day_event.dart';
-
 import 'package:scheduleapp/presenter/bloc/day/day_state.dart';
-import 'package:scheduleapp/presenter/bloc/lesson/lesson_state.dart';
 import 'package:scheduleapp/presenter/widgets/lesson_widget.dart';
 
-class DayWidget extends StatefulWidget {
+class DayWidget extends StatelessWidget {
   const DayWidget({Key? key, required this.day}) : super(key: key);
 
   final DayBloc day;
-
-  @override
-  State<StatefulWidget> createState() => _DayWidget();
-}
-
-class _DayWidget extends State<DayWidget> {
-  late DayBloc day;
-
-  @override
-  void initState() {
-
-
-    super.initState();
-    day = widget.day;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,56 +19,77 @@ class _DayWidget extends State<DayWidget> {
       bloc: day,
       builder: (context, state) {
         if (state.status == DateStateStatus.initial) {
-          int c = 0;
-          return Container(
-
-            child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 22, bottom: 10, top: 4),
-                      child: Text(state.day.fullName, textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    if(state.hiddenLessons>0)
-                      GestureDetector(
-                        onTap: ()=>{day.add(DayEventShowButton())},
-                        child: Container(
-                            child:
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("скрыто ${state.hiddenLessons}",textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70)),
-                                !state.displayHiddenLessons ?  Icon(Icons.keyboard_arrow_down)
-                                    : Icon(Icons.keyboard_arrow_up)
-                              ],
-                            )
-
-                        ),),
-                  ],
-                ),
-
-                for (var i = 0; i< state.lessons.length;i++)
-                  if ( state.lessons[i].state.hidden && !state.displayHiddenLessons)
-                    const SizedBox()
-                  else ...[
-                    if(state.displayHiddenLessons || !state.lessons[i].state.hidden)
-                      LessonWidget(lesson:  state.lessons[i],key: GlobalKey(),top: c++==0,
-                      bottom: ( !state.displayHiddenLessons&&state.lessons.length - state.hiddenLessons == c) || ( state.displayHiddenLessons && state.lessons.length== c))
-                      ,
-                    if (i != state.lessons.lastIndexWhere((el) => !el.state.hidden) || state.displayHiddenLessons)
-                      const SizedBox(
-                        height: 16,
-                      )
-                  ]
-              ],
-            ),);
+          return _buildInitialUI(context, state);
         }
-
-        return const Text("загрузка");
+        return const Center(child: CircularProgressIndicator());
       },
     );
+  }
+
+  Widget _buildInitialUI(BuildContext context, DayState state) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 22, bottom: 10, top: 4),
+                child: Text(state.day.fullName, textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleLarge),
+              ),
+              if (state.hiddenLessons > 0) _buildHiddenLessonsButton(context, state),
+            ],
+          ),
+          ..._buildLessonWidgets(context, state),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHiddenLessonsButton(BuildContext context, DayState state) {
+    return GestureDetector(
+      onTap: () => day.add(DayEventShowButton()),
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("скрыто ${state.hiddenLessons}",
+                textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70)),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              transform: Matrix4.rotationX(state.displayHiddenLessons ? pi : 0),
+              transformAlignment: Alignment.center,
+              child: const Icon(Icons.keyboard_arrow_down),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildLessonWidgets(BuildContext context, DayState state) {
+    final lessonWidgets = <Widget>[];
+    int visibleLessonCount = 0;
+
+    for (var i = 0; i < state.lessons.length; i++) {
+      final lesson = state.lessons[i];
+      if (!(lesson.state.hidden && !state.displayHiddenLessons)) {
+        lessonWidgets.add(LessonWidget(
+          lesson: lesson,
+          key: GlobalKey(),
+          top: visibleLessonCount == 0,
+          bottom: (!state.displayHiddenLessons && visibleLessonCount == state.lessons.length - state.hiddenLessons - 1) ||
+              (state.displayHiddenLessons && i == state.lessons.length - 1),
+        ));
+        visibleLessonCount++;
+
+        if (i != state.lessons.lastIndexWhere((el) => !el.state.hidden) || state.displayHiddenLessons) {
+          lessonWidgets.add(const SizedBox(height: 16));
+        }
+      }
+    }
+    return lessonWidgets;
   }
 }

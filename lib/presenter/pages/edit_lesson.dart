@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:scheduleapp/core/constants/constants.dart';
 import 'package:scheduleapp/data/entities/lesson_entity.dart';
 
+import '../widgets/input/text_input.dart';
+
 @RoutePage()
 class EditLessonScreen extends StatelessWidget {
   const EditLessonScreen({super.key, required this.lesson});
@@ -17,7 +19,12 @@ class EditLessonScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Text("Название: ${lesson.subject}"),
+
+        Row(children: [
+          Text("Название: ${lesson.subject}"),
+          TextInputWithPopupSuggestions(),
+        ]),
+
         Text("Тип: ${lesson.subjectType.fullName}"),
         Text("Время: ${lesson.time.start} ${lesson.time.end} ${lesson.time.label}"),
         Text("Формат: ${lesson.lessonType.fullName}"),
@@ -25,7 +32,10 @@ class EditLessonScreen extends StatelessWidget {
         Text("Подгруппа: ${lesson.subgroup}"),
         Text("День: ${lesson.date.day.fullName}"),
         Text("Аудитория: ${lesson.classroom}"),
-
+          Row(children: [
+            Text("Название: ${lesson.subject}"),
+            TextInputWithPopupSuggestions(),
+          ]),
       ],),
     );
     Text("редактор");

@@ -67,8 +67,8 @@ class _LessonWidget extends State<LessonWidget> {
                 transformAlignment: Alignment.centerLeft,
                 transform: state.isPressed
                     ? Matrix4(0.96, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-                    : Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
-                child: Stack(
+                    :  Matrix4.identity(),
+                child:  Stack(
                   children: [
                     Opacity(
                       opacity: state.hidden ? 0.3 : 1,
@@ -88,13 +88,13 @@ class _LessonWidget extends State<LessonWidget> {
                               duration: const Duration(milliseconds: 100),
                               transform: state.isPressed
                                   ? Matrix4(0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-                                  : Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
+                                  : Matrix4.identity(),
                               transformAlignment: Alignment.center,
                               margin: const EdgeInsets.only(right: 8, bottom: 8),
                               width: 16,
                               height: 16,
                               decoration: BoxDecoration(
-                                color: state.selected ? const MyColors().sixth : const MyColors().dark_4,
+                                color: state.selected ?  MyColors.sixth :  MyColors.dark_4,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: state.selected ? const Icon(FluentIcons.checkmark_12_regular, size: 14) : const SizedBox(),
