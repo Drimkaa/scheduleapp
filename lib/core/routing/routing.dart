@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import '../../presenter/bloc/lesson/lesson_bloc.dart';
+import '../../presenter/bloc/lesson/lesson_state.dart';
+import '../../presenter/pages/lesson_page.dart';
 import '../../presenter/pages/week_schedule.dart';
 
 import '../../data/entities/lesson_entity.dart';
@@ -17,6 +20,11 @@ class AppRouter extends _$AppRouter {
       initial: false,
       transitionsBuilder: TransitionsBuilders.noTransition,
 
+    ),
+    CustomRoute(
+      page: LessonRoute.page,
+      initial: false,
+      transitionsBuilder: TransitionsBuilders.noTransition,
     ),
     CustomRoute(
       page: WeekScheduleRoute.page,

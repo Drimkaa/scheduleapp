@@ -19,7 +19,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<Dio>(Dio());
 
   //Dependencies
-  LocalDataSource loc = LocalDataSource();
+  LocalDataSource loc = const LocalDataSource();
   await loc.initialize();
   sl.registerSingleton<LocalDataSource>(loc);
   PostgresDataSource db = PostgresDataSource();

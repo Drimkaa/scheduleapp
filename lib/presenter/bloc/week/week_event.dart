@@ -28,6 +28,14 @@ class UpdateCount extends WeekPageEvent {
   @override
   List<Object> get props => [count];
 }
+class WeekPageEventHideLesson extends WeekPageEvent {
+  final String id;
+
+  WeekPageEventHideLesson({this.id = ""});
+  @override
+  List<Object> get props => [];
+}
+
 class WeekPageEventSelectLesson extends WeekPageEvent {
   final bool select;
   final String id;
@@ -40,7 +48,7 @@ class WeekPageEventSelectLesson extends WeekPageEvent {
 
 class WeekPageEventSelectAll  extends WeekPageEvent {
   final String id;
-  WeekPageEventSelectAll({String id = ""}) : id = id;
+  WeekPageEventSelectAll({this.id = ""});
   @override
   List<Object> get props => [id];
 }

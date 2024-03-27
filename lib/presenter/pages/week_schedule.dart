@@ -1,20 +1,14 @@
+
 import 'package:auto_route/annotations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:scheduleapp/core/constants/constants.dart';
 import 'package:scheduleapp/core/utils/time/time_service.dart';
-import 'package:scheduleapp/injection_container.dart';
-import 'package:scheduleapp/presenter/bloc/edit/edit_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/lesson/lesson_event.dart';
 import 'package:scheduleapp/presenter/bloc/right_menu/right_menu_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/right_menu/right_menu_event.dart';
 import 'package:scheduleapp/presenter/bloc/week/week_bloc.dart';
-import 'package:scheduleapp/presenter/bloc/week/week_event.dart';
-import 'package:scheduleapp/presenter/bloc/week/week_state.dart';
 import 'package:scheduleapp/presenter/widgets/day_widget.dart';
 
 import '../../core/constants/my_colors.dart';
@@ -28,11 +22,23 @@ import '../widgets/right_menu/right_menu.dart';
 class WeekScheduleScreen extends StatelessWidget {
   const WeekScheduleScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: _buildAppbar(context),
-      body: _buildBody(context),
+      body:  PopScope(
+        canPop: false,
+        onPopInvoked: (e){
+          if(BlocProvider.of<WeekPageBloc>(context).state.editMode){
+            BlocProvider.of<WeekPageBloc>(context).add(CloseEditMode());
+          }
+
+
+        },
+    child:_buildBody(context),
+    )
     );
   }
 
@@ -56,7 +62,7 @@ class WeekScheduleScreen extends StatelessWidget {
                   ),
                 ),
                 BlocSelector<WeekPageBloc, WeekPageState, int>(
-                    selector: (state) => state.selectedCount,
+                    selector: (state2) => state2.selectedCount,
                     builder: (_, count) {
                       return Container(
                         decoration:
@@ -69,7 +75,7 @@ class WeekScheduleScreen extends StatelessWidget {
                       );
                     }),
                 BlocSelector<WeekPageBloc, WeekPageState, bool>(
-                    selector: (state) => state.allSelected,
+                    selector: (state3) => state3.allSelected,
                     builder: (_, allSelected) {
                       return CustomColorIconButton(
                         onPressed: () => BlocProvider.of<WeekPageBloc>(_).add(WeekPageEventSelectAll()),
@@ -100,8 +106,9 @@ class WeekScheduleScreen extends StatelessWidget {
                 ),
               ),
               BlocSelector<WeekPageBloc, WeekPageState, int>(
-                selector: (state) => state.weekNumber,
-                builder: (_, state) {
+                key: GlobalKey(),
+                selector: (state4) => state4.weekNumber,
+                builder: (_, wNumber) {
                   int weekNumber = TimeService.instance.currentWeek;
                   return Stack(
                     fit: StackFit.loose,
@@ -110,7 +117,7 @@ class WeekScheduleScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(18),
                             color: MyColors.dark_1,
-                            boxShadow: state == weekNumber
+                            boxShadow: wNumber == weekNumber
                                 ? [const BoxShadow(color: Colors.white, spreadRadius: 1.5, blurRadius: 0)]
                                 : []),
                         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -125,7 +132,7 @@ class WeekScheduleScreen extends StatelessWidget {
                                 SizedBox(
                                   width: 160,
                                   child: Text(
-                                    "$state неделя (${state % 2 == 0 ? "четная" : "нечетная"})",
+                                    "$wNumber неделя (${wNumber % 2 == 0 ? "четная" : "нечетная"})",
                                     style: Theme.of(_).textTheme.titleMedium,
                                     textAlign: TextAlign.center,
                                   ),
@@ -200,9 +207,9 @@ class WeekScheduleScreen extends StatelessWidget {
                       onNotification: (scrollNotification) {
                         if (scrollNotification is ScrollStartNotification) {
                           BlocProvider.of<WeekPageBloc>(context).state.schedule.forEach((element) {
-                            element.state.lessons.forEach((element) {
+                            for (var element in element.state.lessons) {
                               element.add(LessonEventStartScroll());
-                            });
+                            }
                           });
                           _scrollEvent(context);
                         }

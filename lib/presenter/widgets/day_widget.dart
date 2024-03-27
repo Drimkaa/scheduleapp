@@ -9,7 +9,7 @@ import 'package:scheduleapp/presenter/bloc/day/day_state.dart';
 import 'package:scheduleapp/presenter/widgets/lesson_widget.dart';
 
 class DayWidget extends StatelessWidget {
-  const DayWidget({Key? key, required this.day}) : super(key: key);
+  const DayWidget({super.key, required this.day});
 
   final DayBloc day;
 
@@ -27,44 +27,40 @@ class DayWidget extends StatelessWidget {
   }
 
   Widget _buildInitialUI(BuildContext context, DayState state) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 22, bottom: 10, top: 4),
-                child: Text(state.day.fullName, textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleLarge),
-              ),
-              if (state.hiddenLessons > 0) _buildHiddenLessonsButton(context, state),
-            ],
-          ),
-          ..._buildLessonWidgets(context, state),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 22, bottom: 10, top: 4),
+              child: Text(state.day.fullName, textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleLarge),
+            ),
+            if (state.hiddenLessons > 0) _buildHiddenLessonsButton(context, state),
+          ],
+        ),
+        ..._buildLessonWidgets(context, state),
+      ],
     );
   }
 
   Widget _buildHiddenLessonsButton(BuildContext context, DayState state) {
     return GestureDetector(
       onTap: () => day.add(DayEventShowButton()),
-      child: Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("скрыто ${state.hiddenLessons}",
-                textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70)),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              transform: Matrix4.rotationX(state.displayHiddenLessons ? pi : 0),
-              transformAlignment: Alignment.center,
-              child: const Icon(Icons.keyboard_arrow_down),
-            )
-          ],
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("скрыто ${state.hiddenLessons}",
+              textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white70)),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            transform: Matrix4.rotationX(state.displayHiddenLessons ? pi : 0),
+            transformAlignment: Alignment.center,
+            child: const Icon(Icons.keyboard_arrow_down),
+          )
+        ],
       ),
     );
   }
@@ -76,9 +72,11 @@ class DayWidget extends StatelessWidget {
     for (var i = 0; i < state.lessons.length; i++) {
       final lesson = state.lessons[i];
       if (!(lesson.state.hidden && !state.displayHiddenLessons)) {
+        GlobalKey key = GlobalKey();
         lessonWidgets.add(LessonWidget(
           lesson: lesson,
-          key: GlobalKey(),
+          key: key,
+          key2:key,
           top: visibleLessonCount == 0,
           bottom: (!state.displayHiddenLessons && visibleLessonCount == state.lessons.length - state.hiddenLessons - 1) ||
               (state.displayHiddenLessons && i == state.lessons.length - 1),

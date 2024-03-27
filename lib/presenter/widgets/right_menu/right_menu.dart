@@ -9,7 +9,7 @@ import '../../../core/constants/my_colors.dart';
 import 'day_button.dart';
 
 class RightMenu extends StatelessWidget {
-  const RightMenu({Key? key, required this.bloc}) : super(key: key);
+  const RightMenu({super.key, required this.bloc});
 
   final RightMenuBloc bloc;
 
@@ -31,7 +31,7 @@ class RightMenu extends StatelessWidget {
               ),
               child: ListView.separated(
                 itemCount: state.days.length,
-                separatorBuilder: (_, __) => SizedBox(height: 10),
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
                 itemBuilder: (_, index) {
                   final day = state.days[index];
                   final isCurrentDay = state.currentDay == day.pos;

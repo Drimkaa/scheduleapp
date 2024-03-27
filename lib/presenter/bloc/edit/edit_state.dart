@@ -14,7 +14,7 @@ enum EditStateStatus {
 class EditState with _$EditState {
   const factory EditState({
     @Default(EditStateStatus.initial) EditStateStatus status,
-    @Default([]) Map<Weekday,List<String>> selectedLessons,
+    @Default({}) Map<Weekday,List<String>> selectedLessons,
     @Default(0) int selectedCount,
     Exception? error,
   }) = _EditState;

@@ -4,22 +4,21 @@ import '../../../data/usecase/get_suggestions.dart';
 import '../../../injection_container.dart';
 
 class ScrollableList extends StatefulWidget {
-   ScrollableList({Key? key,required this.text, required this.onChanged}) : super(key: key);
+   const ScrollableList({super.key,required this.text, required this.onChanged});
    final TextEditingController text;
   final void Function(String)  onChanged;
   @override
-  _ScrollableListState createState() => _ScrollableListState();
+  State<StatefulWidget> createState() => _ScrollableListState();
 }
 
 class _ScrollableListState extends State<ScrollableList> {
  late List<String> items = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   bool allLoaded = false;
 
   @override
    initState() {
-    print("init state");
     super.initState();
     sl<GetSuggestionsUseCase>().call(widget.text.value.text).then((value) => setState((){items = value;}));
     init();
@@ -43,7 +42,6 @@ class _ScrollableListState extends State<ScrollableList> {
   }
   @override
   void dispose() {
-    print("dispose");
     widget.text.removeListener(textListener);
     _scrollController.dispose();
     super.dispose();
@@ -99,11 +97,11 @@ class _ScrollableListState extends State<ScrollableList> {
   // Виджет индикатора загрузки
   Widget _buildProgressIndicator() {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Center(
         child: Opacity(
           opacity: isLoading ? 1.0 : 0.0, // Отображаем индикатор загрузки только если isLoading = true
-          child: CircularProgressIndicator(),
+          child: const CircularProgressIndicator(),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-import 'package:scheduleapp/core/constants/constants.dart';
 import 'package:scheduleapp/core/utils/time/time_service.dart';
 import 'package:scheduleapp/data/entities/day_entity.dart';
 import 'package:scheduleapp/data/entities/lesson_time_entity.dart';
@@ -22,8 +21,8 @@ class GetWeekDaysSchedule {
   _groupRepository = groupRepository;
   Future<List> getWeekDays({required int number}) async {
     if(number==-1){
-      TimeService _serv = TimeService.instance;
-      number = _serv.currentWeek;
+      TimeService serv = TimeService.instance;
+      number = serv.currentWeek;
     }
 
      Group group = await _groupRepository.getGroup();

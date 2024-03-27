@@ -24,10 +24,10 @@ class GroupRepositoryImpl extends GroupRepository {
     final hasCachedData = await _localDataSource.hasGroupData();
 
     if (!hasCachedData) {
-      Group _group = Group(subgroup: 2, group: "21-СТ");
+      Group group0 = const Group(subgroup: 2, group: "21-СТ");
 
 
-      await _localDataSource.saveGroup(GroupHiveModel()..subgroup=_group.subgroup..group=_group.group);
+      await _localDataSource.saveGroup(GroupHiveModel()..subgroup=group0.subgroup..group=group0.group);
     }
 
     final group = await _localDataSource.getGroup();

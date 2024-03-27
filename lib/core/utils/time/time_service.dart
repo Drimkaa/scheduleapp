@@ -1,7 +1,6 @@
 
 
 import 'package:scheduleapp/core/constants/constants.dart';
-import 'package:scheduleapp/data/entities/date_entity.dart';
 export 'package:scheduleapp/core/constants/constants.dart';
 
 

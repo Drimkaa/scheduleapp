@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/edit/edit_event.dart';
 import 'package:scheduleapp/presenter/bloc/edit/edit_state.dart';
-import 'package:scheduleapp/presenter/bloc/week/week_bloc.dart';
 
 import '../../../core/constants/constants.dart';
 

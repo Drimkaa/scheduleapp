@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduleapp/core/constants/constants.dart';
@@ -6,10 +5,15 @@ import 'package:scheduleapp/data/entities/day_entity.dart';
 import 'package:scheduleapp/data/usecase/get_weeks.dart';
 import 'package:scheduleapp/presenter/bloc/day/day_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/day/day_event.dart';
-import 'package:scheduleapp/presenter/bloc/lesson/lesson_bloc.dart';
 import 'package:scheduleapp/presenter/bloc/lesson/lesson_event.dart';
 import 'package:scheduleapp/presenter/bloc/week/week_event.dart';
 import 'package:scheduleapp/presenter/bloc/week/week_state.dart';
+
+import '../lesson/lesson_bloc.dart';
+
+export 'week_event.dart';
+export 'week_state.dart';
+
 
 class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
   final GetWeekDaysSchedule getWeekDaysSchedule;
@@ -24,6 +28,7 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
     on<WeekPageEventSelectAll>(_selectAll);
     on<WeekPageEventEditLesson>(_editLesson);
     on<WeekPageEventHide>(_hideLessons);
+    on<WeekPageEventHideLesson>(_hideLesson);
   }
   _selectLesson(WeekPageEventSelectLesson event, Emitter<WeekPageState> emit) async {
     Map<Weekday, List<String>> temp = {};
@@ -56,7 +61,6 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
 
       }
     }
-    print("selectedCount: ${state.selectedCount}, event-select: ${event.select}, hiddenCount:${hiddenCount}");
     if (event.select) {
       if (temp.containsKey(event.day)) {
         temp[event.day]!.add(event.id);
@@ -137,9 +141,9 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
       }
     }
     if (someIsShowed) {
-      lessons.forEach((element) {
+      for (var element in lessons) {
         element.add(LessonEventHide());
-      });
+      }
       for (var element in state.schedule) {
         if (temp.containsKey(element.day.day)) {
           element.add(DayEventAddHiddenLesson(temp[element.day.day]!.length));
@@ -147,9 +151,9 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
         }
       }
     } else if (!someIsShowed) {
-      lessons.forEach((element) {
+      for (var element in lessons) {
         element.add(LessonEventShow());
-      });
+      }
       for (var element in state.schedule) {
         if (temp.containsKey(element.day.day)) {
           element.add(DayEventDeleteHiddenLesson());
@@ -163,7 +167,20 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
     }
     emit(state.copyWith(editMode: false, selectedCount: 0, selectedLessons: {}));
   }
+  _hideLesson(WeekPageEventHideLesson event, Emitter<WeekPageState> emit) async {
+    for (var element in state.schedule) {
+      for (var lesson in element.state.lessons) {
+        if (lesson.state.lesson.id == event.id) {
+          if(lesson.state.hidden){
+            lesson.add(LessonEventShow());
+          } else {
+            lesson.add(LessonEventHide());
+          }
 
+        }
+      }
+    }
+  }
   _onLoadStarted(GetSchedule event, Emitter<WeekPageState> emit) async {
     emit(state.copyWith(status: WeekPageStateStatus.loading));
     try {
@@ -176,7 +193,7 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
       } else {
         emit(state.copyWith(status: WeekPageStateStatus.error));
       }
-    } on Exception catch (e) {
+    } on Exception {
       emit(state.copyWith(status: WeekPageStateStatus.error));
     }
   }
@@ -196,7 +213,7 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
         element.add(DayEventOpenEditMode());
       }
       emit(state.copyWith(editMode: true));
-    } on Exception catch (e) {
+    } on Exception {
       emit(state.copyWith(status: WeekPageStateStatus.error));
     }
   }

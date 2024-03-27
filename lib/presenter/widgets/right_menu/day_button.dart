@@ -4,14 +4,14 @@ import '../../../core/constants/my_colors.dart';
 
 class DayWidgetButton extends StatelessWidget {
   const DayWidgetButton({
-    Key? key,
+    super.key,
     required this.day,
     required this.position,
     required this.length,
     required this.onPressed,
     required this.selected,
     required this.currentDay,
-  }) : super(key: key);
+  });
 
   final Function() onPressed;
   final Weekday day;
@@ -67,7 +67,7 @@ class DayWidgetButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           boxShadow: boxShadow,
         ),
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         child: Center(
           child: Text(
             day.shortName,

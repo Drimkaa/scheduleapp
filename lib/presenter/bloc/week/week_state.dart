@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:scheduleapp/core/constants/constants.dart';
-import 'package:scheduleapp/data/entities/day_entity.dart';
 import 'package:scheduleapp/presenter/bloc/day/day_bloc.dart';
 
 

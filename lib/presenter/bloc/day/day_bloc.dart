@@ -4,8 +4,8 @@ import 'package:scheduleapp/data/entities/day_entity.dart';
 import 'package:scheduleapp/data/usecase/check_lessons.dart';
 import 'package:scheduleapp/presenter/bloc/day/day_event.dart';
 import 'package:scheduleapp/presenter/bloc/lesson/lesson_bloc.dart';
-import 'package:scheduleapp/presenter/bloc/lesson/lesson_event.dart';
 
+import '../lesson/lesson_event.dart';
 import 'day_state.dart';
 
 class DayBloc extends Bloc<DayEvent, DayState> {
@@ -41,7 +41,7 @@ class DayBloc extends Bloc<DayEvent, DayState> {
       for (var lesson in  state.lessons) {
         lesson.add(LessonEventOpenEditMode());
 
-    }} on Exception catch (e) {
+    }} on Exception {
       emit(state.copyWith(status: DateStateStatus.failure));
     }
 
