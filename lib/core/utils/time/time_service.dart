@@ -53,16 +53,29 @@ class TimeService {
   }
   get semester {
     int currentMonth = currentTime.month;
-    return currentMonth>=9 && currentMonth < 2 ? 1 : 2;
+    return currentMonth>=9 || currentMonth < 2 ? 1 : 2;
   }
-
-  DateTime currentDateTime(int weekNumber){
-    int week = weekNumber;
-    if(semester==2){
-
-      return DateTime(currentTime.year, 2, 9 + (week-1)*7 - DateTime(currentTime.year, 2, 9, 0, 0).weekday, 0, 0);
+  DateTime get firstDay {
+    if(semester == 2) {
+      return DateTime(currentTime.year, 2, 9);
     } else {
-      return DateTime(currentTime.year, 9, 0 + (week-1)*7 - DateTime(currentTime.year, 9, 0, 0, 0).weekday, 0, 0);
+      return DateTime(currentTime.year, 9, 1);
+    }
+  }
+  DateTime currentDateTime(int weekNumber) {
+    DateTime currentTime = DateTime.now(); // или используйте другую переменную, если текущая дата хранится где-то ещё
+
+
+    if (semester == 2) {
+      // Начальная дата для второго семестра - 9 февраля
+      DateTime startOfSemester = DateTime(currentTime.year, 2, 9);
+      // Вычисляем дату, добавляя количество недель к начальной дате
+      return startOfSemester.add(Duration(days: (weekNumber - 1) * 7));
+    } else {
+      // Начальная дата для первого семестра - 1 сентября
+      DateTime startOfSemester = DateTime(currentTime.year, 9, 1);
+      // Вычисляем дату, добавляя количество недель к начальной дате
+      return startOfSemester.add(Duration(days: (weekNumber - 1) * 7));
     }
   }
   String getWeekName(int weekNumber) {
@@ -74,13 +87,25 @@ class TimeService {
     int month = currentDateTime(weekNumber).day + day.pos+1;
     return month;
   }
+  int getWeekNumberFromDate( DateTime date){
+    if(semester == 2) {
+      DateTime firstDayOfFebruary = DateTime(currentTime.year, 2, 9);
+      return ((currentTime.difference(firstDayOfFebruary).inDays + firstDayOfFebruary.weekday - 1) / 7) .ceil();
+    } else {
+      DateTime firstDayOfSeptember = DateTime(currentTime.year, 9, 1);
+      return ((date.difference(firstDayOfSeptember).inDays + firstDayOfSeptember.weekday - 1) / 7) .floor();
+    }
+  }
  int get weekNumber {
 
     if(semester == 2) {
       return ((currentTime.difference(DateTime(currentTime.year, 2, 9, 0, 0)).inDays+ DateTime(currentTime.year, 2, 9, 0, 0).weekday) / 7) .ceil();
     } else {
-      return ((currentTime.difference(DateTime(currentTime.year, 9, 0, 0, 0)).inDays+ DateTime(currentTime.year, 9, 0, 0, 0).weekday) / 7) .ceil();
+      DateTime firstDayOfSeptember = DateTime(currentTime.year, 9, 1);
 
+
+
+      return ((currentTime.difference(firstDayOfSeptember).inDays + firstDayOfSeptember.weekday) / 7) .floor();
     }
   }
   get hours{

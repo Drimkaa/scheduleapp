@@ -7,7 +7,7 @@ part of 'group_entity.dart';
 // **************************************************************************
 
 _$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
-      subgroup: json['subgroup'] as int,
+      subgroup: (json['subgroup'] as num).toInt(),
       group: json['group'] as String,
     );
 

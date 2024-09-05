@@ -21,7 +21,7 @@ class LessonRepositoryImpl extends LessonRepository {
 
   @override
   Future<List<Lesson>> getAllLessons() async {
-    final hasCachedData = await _localDataSource.hasLessonsData();
+    const hasCachedData = false;
 
     if (!hasCachedData) {
       List<Lesson> lessonsTemp = lessonsList;

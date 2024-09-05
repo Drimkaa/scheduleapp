@@ -35,7 +35,9 @@ class WeekPageEventHideLesson extends WeekPageEvent {
   @override
   List<Object> get props => [];
 }
+class WeekPageEventUpdateSubgroup extends WeekPageEvent {
 
+}
 class WeekPageEventSelectLesson extends WeekPageEvent {
   final bool select;
   final String id;

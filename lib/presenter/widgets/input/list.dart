@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/usecase/get_suggestions.dart';
-import '../../../injection_container.dart';
+import '../../../data/repositories/postgres_repository.dart';
 
 class ScrollableList extends StatefulWidget {
-   const ScrollableList({super.key,required this.text, required this.onChanged});
+   const ScrollableList({super.key,required this.text, required this.repository, required this.onChanged});
    final TextEditingController text;
+  final GetSuggestionsRepository repository;
   final void Function(String)  onChanged;
   @override
   State<StatefulWidget> createState() => _ScrollableListState();
@@ -20,7 +20,7 @@ class _ScrollableListState extends State<ScrollableList> {
   @override
    initState() {
     super.initState();
-    sl<GetSuggestionsUseCase>().call(widget.text.value.text).then((value) => setState((){items = value;}));
+    widget.repository.call(widget.text.value.text) .then((value) {return Future.value(value);}).then((value) => setState((){items = value;}));
     init();
     _scrollController.addListener(_onScroll); // Слушатель прокрутки
   }
@@ -33,7 +33,7 @@ class _ScrollableListState extends State<ScrollableList> {
     lastText = widget.text.text;
     allLoaded = false;
     isLoading = false;
-    items = await sl<GetSuggestionsUseCase>().call(widget.text.value.text);
+    items = await widget.repository.call(widget.text.value.text) .then((value) {return Future.value(value);});
     setState(() {});
   }
    init() async {
@@ -64,7 +64,7 @@ class _ScrollableListState extends State<ScrollableList> {
 
       // Загружаем следующие 10 элементов
 
-      List<String> newItems = await sl<GetSuggestionsUseCase>().call(widget.text.text, offset: items.length + 20);
+      List<String> newItems = await widget.repository.call(widget.text.text, offset: items.length + 20) .then((value) {return Future.value(value);});
       setState(() {
         items.addAll(newItems); // Добавляем новые элементы в список
         isLoading = false; // Сбрасываем флаг загрузки

@@ -1,28 +1,38 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:scheduleapp/core/constants/my_colors.dart';
 
-import '../../../data/usecase/get_suggestions.dart';
-import '../../../injection_container.dart';
-
+import '../../../data/repositories/postgres_repository.dart';
 enum ValidatorType { text, number, name, date, time, list }
 
 class TextInputWithPopupSuggestions extends StatefulWidget {
   final String hintText;
   final ValidatorType type;
+
+  final String value;
+  final GetSuggestionsRepository repository;
   const TextInputWithPopupSuggestions({
     super.key,
-    this.hintText = "Enter text",
+    this.value = "",
+
+    required this.repository,
+    this.hintText = "Введите текст",
     this.type = ValidatorType.text,
   });
-
   @override
   State<StatefulWidget> createState() => _TextInputWithPopupSuggestionsState();
 }
 
 class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSuggestions> {
+
+
   @override
   void initState() {
+    if (widget.value.isNotEmpty) {
+      textEditingController.text = widget.value;
+    }
     super.initState();
     _scrollController.addListener(_onScroll);
   }
@@ -31,6 +41,11 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
   void dispose() {
     super.dispose();
     textEditingController.dispose();
+  }
+
+  donePressed() {
+
+    validate(value: textEditingController.text, type: ValidatorType.text);
   }
 
   SuggestionsController<String> suggestionsController = SuggestionsController<String>();
@@ -45,30 +60,47 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
   bool currentStatus = false;
   @override
   Widget build(BuildContext context) {
-пр    return TypeAheadField<String>(
+    return TypeAheadField<String>(
+
+          constraints: const BoxConstraints(maxHeight: 300),
       controller: textEditingController,
-      offset: const Offset(0, -20),
+      offset: const Offset(0, 1),
+      autoFlipDirection: true,
+      hideOnUnfocus: true,
+      hideOnSelect: true,
+      hideKeyboardOnDrag: true,
+      decorationBuilder: (context, child) {
+        return Material(
+          type: MaterialType.card,
+          elevation: 0,
+          color: MyColors.dark_3,
+          borderRadius: BorderRadius.vertical(top: Radius.zero,bottom: Radius.circular(8)),
+          child: child,
+        );
+      },
       suggestionsController: suggestionController,
       suggestionsCallback: (search) {
         allLoaded = false;
         isLoading = false;
 
-        sl<GetSuggestionsUseCase>()
+        widget.repository
             .call(search, offset: 0)
+            .then((value) {
+              return Future.value(value);
+            })
             .then((value) => suggestionController.suggestions = value)
             .then((value) => {_search = search, allLoaded = suggestionController.suggestions!.length < 20});
-
+        return null;
       },
       builder: (context, _, focusNode) {
         return TextFormField(
+
           validator: (value) {
             validate(value: value ?? "", type: widget.type);
             return null;
           },
           focusNode: focusNode,
-          onTap: () => changeFocus(true),
-          onTapOutside: (_) => changeFocus(false),
-          onEditingComplete: () => changeFocus(false),
+
           onChanged: changeValue,
           controller: textEditingController,
           keyboardType: TextInputType.name,
@@ -82,20 +114,19 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
           textAlignVertical: TextAlignVertical.center,
           textAlign: TextAlign.left,
           maxLines: 1,
+
           decoration: InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: errorText == null
-                ? !focusNode.hasFocus
-                    ? null
-                    : IconButton(
+            suffixIcon: errorText == null && currentStatus
+
+                    ? IconButton(
+                        onPressed: donePressed,
                         icon: const Icon(
                           Icons.done_rounded,
+                          color: Colors.greenAccent,
+                          size: 28,
                         ),
-                        color: MyColors.first,
-                        onPressed: () => {
-                          changeFocus(false),
-                          validate(value: textEditingController.text, type: ValidatorType.text),
-                        },
+                        padding: const EdgeInsets.all(0.0),
                       )
                 : null,
             hintText: widget.hintText,
@@ -110,21 +141,8 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
               fontSize: 14,
             ),
             prefix: const SizedBox(width: 12),
-            error: errorText == null
-                ? null
-                : Row(
-                    children: [
-                      const SizedBox(width: 12),
-                      Text(
-                        errorText ?? "",
-                        style: const TextStyle(
-                          color: MyColors.red,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
-                      )
-                    ],
-                  ),
+            error: errorText == null ? null : const SizedBox(),
+
             alignLabelWithHint: false,
             errorBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: MyColors.red, width: 2),
@@ -153,7 +171,18 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
         );
       },
       listBuilder: (context, cities) {
-        return ListView.builder(
+        return
+          TapRegion(
+        onTapOutside: (t) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+              child:
+
+
+          Container(
+            child:
+
+          ListView.builder(
           shrinkWrap: true,
           controller: _scrollController,
           // Подключаем контроллер прокрутки
@@ -167,7 +196,7 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
               return _buildProgressIndicator(); // Возвращаем индикатор загрузки в конце списка
             }
           },
-        );
+        )));
       },
       itemBuilder: (context, city) {
         int id = city.toLowerCase().indexOf(_search.toLowerCase());
@@ -184,21 +213,21 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
           ),
         ));
       },
+      emptyBuilder: (context) {
+        return const SizedBox(
+          height: 32,
+          child: Center(
+            child: Text("Ничего не найдено"),
+          ),
+        );
+      },
       onSelected: (city) {
         changeValue(city, needController: true);
-        changeFocus(false);
       },
     );
   }
 
-  changeFocus(bool newStatus) async {
-    if (currentStatus == false && newStatus == true) {
-      currentStatus = true;
-    } else if (currentStatus == true && newStatus == false) {
-      currentStatus = false;
-      FocusScope.of(context).unfocus();
-    }
-  }
+
 
   changeValue(String value, {bool needController = false}) {
     if (needController) {
@@ -228,7 +257,9 @@ class _TextInputWithPopupSuggestionsState extends State<TextInputWithPopupSugges
         isLoading = true;
       });
       List<String> newItems =
-          await sl<GetSuggestionsUseCase>().call(_search, offset: suggestionController.suggestions!.length + 20);
+          await widget.repository.call(_search, offset: suggestionController.suggestions!.length + 20).then((value) {
+        return Future.value(value);
+      });
       setState(() {
         suggestionController.suggestions = [...suggestionController.suggestions!, ...newItems];
         isLoading = false;

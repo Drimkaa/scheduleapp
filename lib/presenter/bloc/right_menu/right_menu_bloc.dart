@@ -13,15 +13,22 @@ class RightMenuBloc extends Bloc<RightMenuEvent, RightMenuState> {
     on<RightMenuEventInitialize>(_initialize);
   }
   _moveTo(RightMenuEventMoveTo event, Emitter<RightMenuState> emit) async {
+    if(event.day < -1 || event.day > state.days.length-1) return;
+    if(event.day == -1) {
+      emit(state.copyWith(selected: -1));
+      return;
+    }
     if (isPressed) return;
     isPressed = true;
-    if (event.day > -1 && event.day != state.selected) {
-      await Scrollable.ensureVisible(state.keys[event.day].currentContext!,
-              curve: Curves.linear, duration: const Duration(milliseconds: 100))
-          .whenComplete(() => {});
-    }
-    emit(state.copyWith(selected: event.day));
-    isPressed = false;
+
+      if (event.day != state.selected) {
+        await Scrollable.ensureVisible(state.keys[event.day].currentContext!,
+            curve: Curves.linear, duration: const Duration(milliseconds: 100))
+            .whenComplete(() => {});
+      }
+      emit(state.copyWith(selected: event.day));
+      isPressed = false;
+
   }
 
   _initialize(RightMenuEventInitialize event, Emitter<RightMenuState> emit) async {

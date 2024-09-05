@@ -8,6 +8,7 @@ abstract class GroupRepository {
   const GroupRepository();
 
   Future<Group> getGroup();
+  Future<void> setSubgroup(int subgroup);
 
 }
 
@@ -35,5 +36,30 @@ class GroupRepositoryImpl extends GroupRepository {
     final returned = group.toEntity();
 
     return returned;
+  }
+  @override
+  @override
+  Future<void> setSubgroup(int subgroup) async {
+
+    final hasCachedData = await _localDataSource.hasGroupData();
+
+    if (!hasCachedData) {
+      Group group0 = const Group(subgroup: 2, group: "21-СТ");
+
+      await _localDataSource.saveGroup(
+        GroupHiveModel()
+          ..subgroup = group0.subgroup
+          ..group = group0.group,
+      );
+    } else {
+      final value = await _localDataSource.getGroup();
+
+      await _localDataSource.saveGroup(
+        GroupHiveModel()
+          ..subgroup = subgroup
+          ..group = value.group,
+      );
+    }
+
   }
 }

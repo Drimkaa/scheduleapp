@@ -27,8 +27,12 @@ class LessonInfoWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(lesson.time.start, style: Theme.of(context).textTheme.bodyLarge),
+                  if(lesson.lessonType==LessonType.person)
                   Text(lesson.classroom,
                       textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: MyColors.first)),
+                  if(lesson.lessonType == LessonType.remote)
+                    Text("Дистант",
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: MyColors.first)),
                   Text(lesson.time.end, style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),

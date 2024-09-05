@@ -5,6 +5,7 @@ class CardWithImage extends StatelessWidget {
   final Widget child;
   final AssetImage image;
   final Color gradientColor;
+
   const CardWithImage({
     super.key,
     required this.child,
@@ -22,8 +23,12 @@ class CardWithImage extends StatelessWidget {
             decoration: BoxDecoration(
               color: MyColors.dark_3,
               image: DecorationImage(
-                image: image,
-                fit: BoxFit.cover,
+                image: ResizeImage(
+                  image,
+                  width: 640,  // ширина, с которой будет декодироваться изображение
+                  height: 640,  // высота, с которой будет декодироваться изображение
+                ),
+                fit: BoxFit.fitWidth,
               ),
             ),
           ),

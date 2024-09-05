@@ -35,6 +35,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    RedactorRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RedactorScreen(),
+      );
+    },
+    SettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SettingsScreen(),
+      );
+    },
     WeekScheduleRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -117,6 +129,34 @@ class LessonRouteArgs {
   String toString() {
     return 'LessonRouteArgs{key: $key, lesson: $lesson}';
   }
+}
+
+/// generated route for
+/// [RedactorScreen]
+class RedactorRoute extends PageRouteInfo<void> {
+  const RedactorRoute({List<PageRouteInfo>? children})
+      : super(
+          RedactorRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RedactorRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SettingsScreen]
+class SettingsRoute extends PageRouteInfo<void> {
+  const SettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          SettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

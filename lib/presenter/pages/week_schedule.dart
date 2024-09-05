@@ -1,9 +1,11 @@
 
-import 'package:auto_route/annotations.dart';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scheduleapp/core/routing/routing.dart';
 import 'package:scheduleapp/core/utils/time/time_service.dart';
 import 'package:scheduleapp/presenter/bloc/lesson/lesson_event.dart';
 import 'package:scheduleapp/presenter/bloc/right_menu/right_menu_bloc.dart';
@@ -96,14 +98,16 @@ class WeekScheduleScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomColorIconButton(
-                onPressed: () => {},
+
+                onPressed: () {
+
+                  context.router.pushNamed('/settings');
+
+                },
                 iconData: FluentIcons.settings_24_regular,
-                background: MyColors.dark_4,
-                boxShadow: const BoxShadow(
-                  color: Colors.black,
-                  spreadRadius: 0,
-                  blurRadius: 2,
-                ),
+                background: MyColors.dark_1,
+
+
               ),
               BlocSelector<WeekPageBloc, WeekPageState, int>(
                 key: GlobalKey(),
@@ -151,13 +155,17 @@ class WeekScheduleScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                  onTap: () => BlocProvider.of<WeekPageBloc>(_, listen: false).add(GetSchedule(
-                                      weekNumber: BlocProvider.of<WeekPageBloc>(_, listen: false).state.weekNumber - 1))),
+                                  onTap: () { BlocProvider.of<WeekPageBloc>(_, listen: false).add(GetSchedule(
+                                      weekNumber: BlocProvider.of<WeekPageBloc>(_, listen: false).state.weekNumber - 1));
+                                  BlocProvider.of<RightMenuBloc>(_, listen: false).add(RightMenuEventMoveTo(day: -1));
+                                  }),
                             ),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => BlocProvider.of<WeekPageBloc>(_, listen: false).add(GetSchedule(
-                                    weekNumber: BlocProvider.of<WeekPageBloc>(_, listen: false).state.weekNumber + 1)),
+                                onTap: () { BlocProvider.of<WeekPageBloc>(_, listen: false).add(GetSchedule(
+                  weekNumber: BlocProvider.of<WeekPageBloc>(_, listen: false).state.weekNumber + 1));
+                                  BlocProvider.of<RightMenuBloc>(_, listen: false).add(RightMenuEventMoveTo(day: -1));
+                                  },
                               ),
                             )
                           ],
@@ -170,12 +178,8 @@ class WeekScheduleScreen extends StatelessWidget {
               CustomColorIconButton(
                 onPressed: () => {showCalendar(context)},
                 iconData: FluentIcons.calendar_48_regular,
-                background: MyColors.dark_4,
-                boxShadow: const BoxShadow(
-                  color: Colors.black,
-                  spreadRadius: 0,
-                  blurRadius: 2,
-                ),
+                background: MyColors.dark_1,
+
               ),
             ],
           );

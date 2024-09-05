@@ -1,5 +1,6 @@
 
 
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:scheduleapp/data/source/local/models/date.dart';
 import 'package:scheduleapp/data/source/local/models/group/group.dart';
@@ -7,8 +8,7 @@ import 'package:scheduleapp/data/source/local/models/lesson.dart';
 import 'package:scheduleapp/data/source/local/models/lesson_time.dart';
 import 'package:scheduleapp/data/source/local/models/note.dart';
 import 'package:scheduleapp/data/source/local/models/week.dart';
-
-class LocalDataSource {
+class LocalDataSource{
   const LocalDataSource();
 
   Future<void> initialize() async {
@@ -52,7 +52,7 @@ class LocalDataSource {
   }
   Future<GroupHiveModel> getGroup() async {
     final box = Hive.box<GroupHiveModel>(GroupHiveModel.boxKey);
-    return box.getAt(0)!;
+    return box.get(1)!; // Используйте ключ вместо индекса
   }
   Future<bool> hasDateData() async {
     final dateBox = Hive.box<DateHiveModel>(DateHiveModel.boxKey);
@@ -83,6 +83,7 @@ class LocalDataSource {
 
     return lessons;
   }
+
 
   Future<LessonHiveModel?> getLesson({required int id}) async {
     final lessonBox = Hive.box<LessonHiveModel>(LessonHiveModel.boxKey);

@@ -7,8 +7,8 @@ part of 'note_entity.dart';
 // **************************************************************************
 
 _$NoteImpl _$$NoteImplFromJson(Map<String, dynamic> json) => _$NoteImpl(
-      id: json['id'] as int,
-      lessonId: json['lessonId'] as int,
+      id: (json['id'] as num).toInt(),
+      lessonId: (json['lessonId'] as num).toInt(),
       text: json['text'] as String,
       date: Date.fromJson(json['date'] as Map<String, dynamic>),
     );

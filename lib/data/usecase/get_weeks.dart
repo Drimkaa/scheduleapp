@@ -26,6 +26,7 @@ class GetWeekDaysSchedule {
     }
 
      Group group = await _groupRepository.getGroup();
+
      List<Lesson> lessons = await _lessonRepository.getAllLessons();
      Map<int,Day> scheduleOfWeek = {};
      for(var lesson in lessons){

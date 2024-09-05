@@ -23,7 +23,7 @@ _$LessonImpl _$$LessonImplFromJson(Map<String, dynamic> json) => _$LessonImpl(
       date: json['date'] == null
           ? const Date()
           : Date.fromJson(json['date'] as Map<String, dynamic>),
-      subgroup: json['subgroup'] as int? ?? 0,
+      subgroup: (json['subgroup'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$LessonImplToJson(_$LessonImpl instance) =>

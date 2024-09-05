@@ -9,6 +9,7 @@ import 'package:scheduleapp/core/constants/my_colors.dart';
 import 'package:scheduleapp/core/utils/theme_switcher/theme_service.dart';
 import 'package:scheduleapp/injection_container.dart';
 import 'package:scheduleapp/presenter/bloc/edit/edit_bloc.dart';
+import 'package:scheduleapp/presenter/bloc/edit_lesson/edit_lesson_bloc.dart';
 import 'core/routing/routing.dart';
 import 'core/utils/theme_switcher/animated_theme_switcher.dart';
 import 'presenter/bloc/right_menu/right_menu_bloc.dart';
@@ -30,8 +31,8 @@ Future<void> main() async {
         return MultiBlocProvider(providers: [
           BlocProvider<WeekPageBloc>(create: (_) => sl<WeekPageBloc>()..add(GetSchedule())),
           BlocProvider<RightMenuBloc>(create: (_) => sl<RightMenuBloc>()),
-          BlocProvider<EditBloc>(create: (_) => sl<EditBloc>())
-        ], child: ThemeSwitchingArea(child:
+          BlocProvider<EditBloc>(create: (_) => sl<EditBloc>()),
+        BlocProvider<EditLessonBloc>(create: (_) => EditLessonBloc())], child: ThemeSwitchingArea(child:
 
          MyApp(theme: initTheme, router: appRouter)
         )
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
       ),
       routerConfig: router.config(),
-      title: 'Flutter Demo',
+      title: 'Dimasik sdelal',
       debugShowCheckedModeBanner: false,
       theme: theme,
     );

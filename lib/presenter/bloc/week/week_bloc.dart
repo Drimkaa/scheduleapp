@@ -23,8 +23,8 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
     on<GetSchedule>(_onLoadStarted);
     on<SetEditMode>(_onSetEditMode);
     on<CloseEditMode>(_onCloseEditMode);
-
     on<WeekPageEventSelectLesson>(_selectLesson);
+    on<WeekPageEventUpdateSubgroup>(_updateSchedule);
     on<WeekPageEventSelectAll>(_selectAll);
     on<WeekPageEventEditLesson>(_editLesson);
     on<WeekPageEventHide>(_hideLessons);
@@ -182,9 +182,13 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
     }
   }
   _onLoadStarted(GetSchedule event, Emitter<WeekPageState> emit) async {
+    if(event.weekNumber == state.weekNumber && state.schedule.isNotEmpty) {
+      return;
+    }
     emit(state.copyWith(status: WeekPageStateStatus.loading));
     try {
       final int weekNumber = event.weekNumber;
+
       List value = await getWeekDaysSchedule.getWeekDays(number: weekNumber);
       List<Day> schedule = value[0];
       if (schedule.isNotEmpty) {
@@ -197,7 +201,24 @@ class WeekPageBloc extends Bloc<WeekPageEvent, WeekPageState> {
       emit(state.copyWith(status: WeekPageStateStatus.error));
     }
   }
+  _updateSchedule(WeekPageEventUpdateSubgroup event, Emitter<WeekPageState> emit) async {
 
+    emit(state.copyWith(status: WeekPageStateStatus.loading));
+    try {
+      final int weekNumber = state.weekNumber;
+
+      List value = await getWeekDaysSchedule.getWeekDays(number: weekNumber);
+      List<Day> schedule = value[0];
+      if (schedule.isNotEmpty) {
+        days = schedule.map((e) => DayBloc(day: e, weekNumber: weekNumber)).toList();
+        emit(state.copyWith(status: WeekPageStateStatus.success, schedule: days, weekNumber: value[1]));
+      } else {
+        emit(state.copyWith(status: WeekPageStateStatus.error));
+      }
+    } on Exception {
+      emit(state.copyWith(status: WeekPageStateStatus.error));
+    }
+  }
   _onCloseEditMode(CloseEditMode event, Emitter<WeekPageState> emit) async {
     for (var element in state.schedule) {
       for (var lesson in element.state.lessons) {

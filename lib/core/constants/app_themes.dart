@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'my_colors.dart';
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: const Color(0xff141414),
-  appBarTheme: const AppBarTheme(backgroundColor: Color(0xff262626)),
+  appBarTheme: const AppBarTheme(
+    surfaceTintColor: Colors.transparent,
+    scrolledUnderElevation: 0,
+
+    systemOverlayStyle: SystemUiOverlayStyle.dark,
+    backgroundColor: MyColors.dark_3,),
   textTheme: const TextTheme(
     titleSmall: TextStyle(color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500, fontSize: 12, letterSpacing: 0, height: 0, fontFamily: "Jost"),
     titleMedium: TextStyle(color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500, fontSize: 16, fontFamily: "Jost"),
@@ -22,7 +28,11 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     bodyLarge: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16, height: 1, letterSpacing: 1, fontWeight: FontWeight.w500, fontFamily: "Jost"),
   ),
 
-
+  textSelectionTheme: const TextSelectionThemeData(
+    selectionColor: MyColors.firstD,
+        cursorColor: MyColors.dark_4,
+    selectionHandleColor: MyColors.dark_4,
+  ),
 
 
 
@@ -54,3 +64,16 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   extensions: <ThemeExtension<dynamic>>[const MyColors()],
 );
+extension CustomHeadlineMedium on TextTheme {
+  TextStyle? headlineMediumWith({
+    TextBaseline textBaseline = TextBaseline.alphabetic,
+    FontWeight fontWeight = FontWeight.w300,
+    double fontSize = 16,
+  }) {
+    return headlineMedium?.copyWith(textBaseline: textBaseline, fontWeight: fontWeight, fontSize: fontSize);
+  }
+
+  TextStyle? bodySmallWith({Color color = Colors.white, double fontSize = 20, FontWeight fontWeight = FontWeight.w300}) {
+    return bodySmall?.copyWith(color: color, fontWeight: fontWeight, fontSize: fontSize);
+  }
+}
